@@ -140,6 +140,8 @@ def minter():
                         sleeping(20, 30)
             else:
                 print('На счету ', web3.from_wei(balance_gas, "ether"), ' ETH')
+                if mint_nft == False:
+                    deposit(wallet)
             sleeping(wal_action_sleep, wal_action_sleep+5)
             msg = send_msg(wallet)  # Генерируем сообщение
             sleeping(2, 5)
