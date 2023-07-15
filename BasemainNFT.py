@@ -22,6 +22,7 @@ Gwei = 18  # если газ выше уходим в ожидание
 rpc_base = "https://developer-access-mainnet.base.org/"   # Нода Майннет Басе
 rpc_eth = "https://rpc.ankr.com/eth"    # Нода Эфира
 shuffle = True # False / True Перемешивать кошельки или нет
+mint_nft = True # False / True Минтить НФТ  или нет
 ###########################################################################################################
 
 def sleeping(from_sleep, to_sleep):
@@ -42,7 +43,7 @@ def deposit(privat_key):
     amount_to_transfer = round(random.uniform(DEP_FROM, DEP_TO), 5)
     amount = intToDecimal(amount_to_transfer, 18)
     gasLimit = web3.eth.estimate_gas({'to': Web3.to_checksum_address(to_address), 'from': Web3.to_checksum_address(address),
-                                      'value': web3.to_wei(0.0001, 'ether')}) + random.randint(10000, 30000)
+                                      'value': web3.to_wei(0.0001, 'ether')}) + random.randint(40000, 50000)
 
     tx_built = {
         'chainId': chain_id,
@@ -103,8 +104,6 @@ def mintnft(private_key, msg):
           })
         signed_tx = web3.eth.account.sign_transaction(tx, private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-
-        print(address)
         print(f'Mint NFT: Transaction hash: https://basescan.org/tx/{tx_hash.hex()}')
         print('Waiting for receipt...')
         tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash, timeout=time_to_conf)
@@ -117,11 +116,13 @@ def minter():
         wallets = f.read().splitlines()
     if shuffle:
         random.shuffle(wallets)
+    num = 0
     for wallet in wallets:
         try:
+            num= num+1
             web3 = Web3(Web3.HTTPProvider(rpc_base))
             account = web3.eth.account.from_key(wallet).address
-            print(account)
+            print('№ ', num,' - ',account)
             balance_gas = web3.eth.get_balance(account)
             if web3.from_wei(balance_gas, "ether") == 0:
                 while True:
@@ -130,18 +131,20 @@ def minter():
                     current_gas_price_gwei = web3.from_wei(current_gas_price, 'gwei')
                     if round(current_gas_price_gwei, 1) <= Gwei:
                         deposit(wallet)  # Депозит в майннет Басе
-                        wait_dep(wallet)  # Ждем поступления
+                        if mint_nft:
+                            wait_dep(wallet)  # Ждем поступления
                         break
                     else:
                         print('GWEI', round(current_gas_price_gwei, 1))
                         print('Ждем нормальный газ')
                         sleeping(20, 30)
             else:
-                print('На счету ', web3.from_wei(balance_gas, "ether"))
+                print('На счету ', web3.from_wei(balance_gas, "ether"), ' ETH')
             sleeping(wal_action_sleep, wal_action_sleep+5)
             msg = send_msg(wallet)  # Генерируем сообщение
             sleeping(2, 5)
-            mintnft(wallet, msg)  # Минт
+            if mint_nft:
+                mintnft(wallet, msg)  # Минт
             sleeping(wal_sleep_min, wal_sleep_max)
         except Exception as err:
             print(err)
