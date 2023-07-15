@@ -41,4 +41,8 @@ mint_nft = True # False / True Минтить НФТ Билдера или не�
 
 DONATE на тесты скриптов и благодарность сюда (evm сети) : 0xe7b5cb9f137C663D07EF2539678392650c8e3645
 
+Telegram channel https://t.me/ildar_scripts
+
 Telegram https://t.me/ildarzf
+
+Telegram chat https://t.me/ildarscriptschat
