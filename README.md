@@ -1,6 +1,6 @@
 # Base_deposit_and_minterNFT
 
-ETH Mainnet to Base Mainnet L2  and Mint NFT
+ETH Mainnet to Base Mainnet L2  and Mint NFT BASEBUILDERS
 
 Выводит ETH через официальный контракт в Base Mainnet L2. Сумму указывается в ETH.
 
@@ -11,6 +11,8 @@ wallets.txt вводим приватники 1 приватник одна ст
 Кошельки перемешиваются.
 
 Можно использовать только в режиме депозита.
+
+Если на счету в сети Басе есть средства то пробудет сминтить NFT BASEBUILDERS
 
 ###################  ИЗМЕНЯЕМЫЕ ПАРАМЕТРЫ  #################
 
